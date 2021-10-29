@@ -28,10 +28,10 @@ class Sprite{
             "walk-up"   : [ [1,2],[0,2],[3,2],[0,2], ],
             "walk-left" : [ [1,3],[0,3],[3,3],[0,3], ]
         }
-        this.currentAnimation = "walk-right" //config.currentAnimation || "idle-down";
+        this.currentAnimation = config.currentAnimation || "idle-down";
         this.currentAnimationFrame = 0; //qual frame da animação esta
         
-        this.animationFrameLimit = config.animationFrameLimit || 16;
+        this.animationFrameLimit = config.animationFrameLimit || 16; //basicamente o tempo q cada frame da animação vai levar
         this.animationFrameProgress = this.animationFrameLimit;
 
 
@@ -44,7 +44,11 @@ class Sprite{
     }
 
     setAnimation(key){
-        
+        if(this.currentAnimation !== key){
+            this.currentAnimation = key;
+            this.currentAnimationFrame = 0;
+            this.animationFrameProgress = this.animationFrameLimit;
+        }
     }
 
     updateAnimationProgress(){
