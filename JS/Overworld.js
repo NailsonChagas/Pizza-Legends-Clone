@@ -27,7 +27,7 @@ class Overworld {
 
             //Draw Game Objects
             Object.values(this.map.gameObjects).sort((a, b) => {
-                return a.y - b.y;
+                return a.y - b.y; //arruamando o chapéu do heroi
             }).forEach(object => {
                 object.sprite.draw(this.ctx, cameraPerson);
             })
