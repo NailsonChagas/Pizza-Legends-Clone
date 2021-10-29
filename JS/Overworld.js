@@ -1,4 +1,4 @@
-class Overworld {//mundo do jogo
+class Overworld {
     constructor(config) {
         this.element = config.element;
         this.canvas = this.element.querySelector(".game-canvas");
@@ -8,13 +8,13 @@ class Overworld {//mundo do jogo
 
     startGameLoop() {
         const step = () => {
-            //limpando o canvas antes de desenhar o frame
+            //Clear off the canvas
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            //selecionando o elemento que a camera ira seguir
+            //Establish the camera person
             const cameraPerson = this.map.gameObjects.hero;
 
-            //loop atualizando todos objetos
+            //Update all objects
             Object.values(this.map.gameObjects).forEach(object => {
                 object.update({
                     arrow: this.directionInput.direction,
@@ -22,15 +22,17 @@ class Overworld {//mundo do jogo
                 })
             })
 
-            //desenhar camada de baixo do mapa
+            //Draw Lower layer
             this.map.drawLowerImage(this.ctx, cameraPerson);
 
-            //loop desenhar objetos do mapa
-            Object.values(this.map.gameObjects).forEach(object => {
+            //Draw Game Objects
+            Object.values(this.map.gameObjects).sort((a, b) => {
+                return a.y - b.y;
+            }).forEach(object => {
                 object.sprite.draw(this.ctx, cameraPerson);
             })
 
-            //desenhar camada de cima do mapa
+            //Draw Upper layer
             this.map.drawUpperImage(this.ctx, cameraPerson);
 
             requestAnimationFrame(() => {
@@ -48,5 +50,15 @@ class Overworld {//mundo do jogo
         this.directionInput.init();
 
         this.startGameLoop();
+
+        
+        this.map.startCutscene([
+            { who: "hero", type: "walk", direction: "down" },
+            { who: "hero", type: "walk", direction: "down" },
+            { who: "npcA", type: "walk", direction: "left" },
+            { who: "npcA", type: "walk", direction: "left" },
+            { who: "npcA", type: "stand", direction: "up", time: 800 },
+        ])
+
     }
 }
