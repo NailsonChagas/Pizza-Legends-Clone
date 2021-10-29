@@ -1,24 +1,60 @@
-class OverworldMap{
-    constructor(config){
+class OverworldMap {
+    constructor(config) {
         this.gameObjects = config.gameObjects;
+        this.walls = config.walls || {};
 
         this.lowerImage = new Image();
         this.lowerImage.src = config.lowerSrc; //desenhado no pé do personagem
-        
+
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc; //desenhado acima do personagem
     }
 
-    drawLowerImage(ctx){
-        ctx.drawImage(this.lowerImage, 0, 0);
+    drawLowerImage(ctx, cameraPerson) {
+        ctx.drawImage(
+            this.lowerImage,
+            utils.withGrid(10.5) - cameraPerson.x,
+            utils.withGrid(6) - cameraPerson.y
+        )
     }
 
-    drawUpperImage(ctx){
-        ctx.drawImage(this.upperImage, 0, 0);
+    drawUpperImage(ctx, cameraPerson) {
+        ctx.drawImage(
+            this.upperImage,
+            utils.withGrid(10.5) - cameraPerson.x,
+            utils.withGrid(6) - cameraPerson.y
+        )
     }
+
+    isSpaceTaken(currentX, currentY, direction) {
+        const { x, y } = utils.nextPosition(currentX, currentY, direction);
+        return this.walls[`${x},${y}`] || false;
+    }
+
+    mountObjects() {
+        Object.values(this.gameObjects).forEach(o => {
+
+            //TODO: determine if this object should actually mount
+            o.mount(this);
+
+        })
+    }
+
+    addWall(x, y) {
+        this.walls[`${x},${y}`] = true;
+    }
+    removeWall(x, y) {
+        delete this.walls[`${x},${y}`]
+    }
+    moveWall(wasX, wasY, direction) {
+        this.removeWall(wasX, wasY);
+        const { x, y } = utils.nextPosition(wasX, wasY, direction);
+        this.addWall(x, y);
+    }
+
 }
 
-window.OverworldMaps = { //global
+window.OverworldMaps = {
     DemoRoom: {
         lowerSrc: "IMG/maps/DemoLower.png",
         upperSrc: "IMG/maps/DemoUpper.png",
@@ -27,33 +63,37 @@ window.OverworldMaps = { //global
                 isPlayerControlled: true,
                 x: utils.withGrid(5),
                 y: utils.withGrid(6),
-                src: "IMG/characters/people/hero.png"
             }),
-            /*npc1: new Person({
-                x: utils.withGrid(4),
-                y: utils.withGrid(5),
+            npc1: new Person({
+                x: utils.withGrid(7),
+                y: utils.withGrid(9),
                 src: "IMG/characters/people/npc1.png"
-            })*/
+            })
+        },
+        walls: {
+            [utils.asGridCoord(7, 6)]: true,
+            [utils.asGridCoord(8, 6)]: true,
+            [utils.asGridCoord(7, 7)]: true,
+            [utils.asGridCoord(8, 7)]: true,
         }
     },
     Kitchen: {
         lowerSrc: "IMG/maps/KitchenLower.png",
         upperSrc: "IMG/maps/KitchenUpper.png",
         gameObjects: {
-            hero: new Person({
+            hero: new GameObject({
                 x: 3,
-                y: 7,
-                src: "IMG/characters/people/hero.png"
+                y: 5,
             }),
-            npc1: new GameObject({
+            npcA: new GameObject({
                 x: 9,
                 y: 6,
-                src: "IMG/characters/people/npc1.png"
-            }),
-            npc2: new GameObject({
-                x: 3,
-                y: 8,
                 src: "IMG/characters/people/npc2.png"
+            }),
+            npcB: new GameObject({
+                x: 10,
+                y: 8,
+                src: "IMG/characters/people/npc3.png"
             })
         }
     },
