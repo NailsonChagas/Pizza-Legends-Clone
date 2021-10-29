@@ -1,0 +1,24 @@
+*{
+    box-sizing: border-box; /*The width and height properties (and min/max properties) includes content, padding and border*/
+}
+
+body{
+    background: #333;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.game-container{
+    position: relative; /*An element with position: relative; is positioned relative to its normal position.*/
+    width: 352px;
+    height: 198px;
+    margin: 0 auto;
+    outline: 1px solid white;
+
+    transform: scale(2) translateY(50%); /*multiplicando o tamanho por 2 e deslocando 50% para baixo*/    
+}
+
+.game-container canvas{
+    image-rendering: pixelated; /*dizendo para o navegador deixar a imagem pixelada (não vai borrar com o zoom)*/
+}
