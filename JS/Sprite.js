@@ -1,96 +1,93 @@
 class Sprite {
-    constructor(config) {
+	constructor(config) {
 
-        //Iniciando Imagem
-        this.image = new Image();
-        this.image.src = config.src;
-        this.image.onload = () => {
-            this.isLoaded = true;
-        }
+		//Set up the image
+		this.image = new Image();
+		this.image.src = config.src;
+		this.image.onload = () => {
+			this.isLoaded = true;
+		}
 
-        //Sombra
-        this.shadow = new Image();
-        this.useShadow = true; //config.useShadow || false
-        if (this.useShadow) {
-            this.shadow.src = "IMG/characters/shadow.png";
-        }
-        this.shadow.onload = () => {
-            this.isShadowLoaded = true;
-        }
+		//Shadow
+		this.shadow = new Image();
+		this.useShadow = true; //config.useShadow || false
+		if (this.useShadow) {
+			this.shadow.src = "/IMG/characters/shadow.png";
+		}
+		this.shadow.onload = () => {
+			this.isShadowLoaded = true;
+		}
 
-        //Configurando animações e Estado Inicial
-        this.animations = config.animations || {
-            "idle-down": [[0, 0]],
-            "idle-right": [[0, 1]],
-            "idle-up": [[0, 2]],
-            "idle-left": [[0, 3]],
-            "walk-down": [[1, 0], [0, 0], [3, 0], [0, 0],],
-            "walk-right": [[1, 1], [0, 1], [3, 1], [0, 1],],
-            "walk-up": [[1, 2], [0, 2], [3, 2], [0, 2],],
-            "walk-left": [[1, 3], [0, 3], [3, 3], [0, 3],]
-        }
-        this.currentAnimation = "idle-right"; // config.currentAnimation || "idle-down";
-        this.currentAnimationFrame = 0; //qual frame da animação esta
+		//Configure Animation & Initial State
+		this.animations = config.animations || {
+			"idle-down": [[0, 0]],
+			"idle-right": [[0, 1]],
+			"idle-up": [[0, 2]],
+			"idle-left": [[0, 3]],
+			"walk-down": [[1, 0], [0, 0], [3, 0], [0, 0],],
+			"walk-right": [[1, 1], [0, 1], [3, 1], [0, 1],],
+			"walk-up": [[1, 2], [0, 2], [3, 2], [0, 2],],
+			"walk-left": [[1, 3], [0, 3], [3, 3], [0, 3],]
+		}
+		this.currentAnimation = "idle-right"; // config.currentAnimation || "idle-down";
+		this.currentAnimationFrame = 0;
 
-        this.animationFrameLimit = config.animationFrameLimit || 8;
-        this.animationFrameProgress = this.animationFrameLimit;
-
-
-        //Objeto representado
-        this.gameObject = config.gameObject;
-    }
-
-    get frame() {
-        return this.animations[this.currentAnimation][this.currentAnimationFrame]
-    }
-
-    setAnimation(key) {
-        if (this.currentAnimation !== key) {
-            this.currentAnimation = key;
-            this.currentAnimationFrame = 0;
-            this.animationFrameProgress = this.animationFrameLimit;
-        }
-    }
-
-    updateAnimationProgress() {
-        //Downtick frame progress
-        if (this.animationFrameProgress > 0) {
-            this.animationFrameProgress -= 1;
-            return;
-        }
-
-        //Reset the counter
-        this.animationFrameProgress = this.animationFrameLimit;
-        this.currentAnimationFrame += 1;
-
-        if (this.frame === undefined) {
-            this.currentAnimationFrame = 0
-        }
+		this.animationFrameLimit = config.animationFrameLimit || 8;
+		this.animationFrameProgress = this.animationFrameLimit;
 
 
-    }
+		//Reference the game object
+		this.gameObject = config.gameObject;
+	}
+
+	get frame() {
+		return this.animations[this.currentAnimation][this.currentAnimationFrame]
+	}
+
+	setAnimation(key) {
+		if (this.currentAnimation !== key) {
+			this.currentAnimation = key;
+			this.currentAnimationFrame = 0;
+			this.animationFrameProgress = this.animationFrameLimit;
+		}
+	}
+
+	updateAnimationProgress() {
+		//Downtick frame progress
+		if (this.animationFrameProgress > 0) {
+			this.animationFrameProgress -= 1;
+			return;
+		}
+
+		//Reset the counter
+		this.animationFrameProgress = this.animationFrameLimit;
+		this.currentAnimationFrame += 1;
+
+		if (this.frame === undefined) {
+			this.currentAnimationFrame = 0
+		}
 
 
-    draw(ctx, cameraPerson) {
-        const x = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x;
-        const y = this.gameObject.y - 18 + utils.withGrid(6) - cameraPerson.y;
-
-        this.isShadowLoaded && ctx.drawImage(this.shadow, x, y);
+	}
 
 
-        const [frameX, frameY] = this.frame;
+	draw(ctx, cameraPerson) {
+		const x = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x;
+		const y = this.gameObject.y - 18 + utils.withGrid(6) - cameraPerson.y;
 
-        this.isLoaded && ctx.drawImage(this.image,
-            frameX * 32, //onde começa o left cut
-            frameY * 32, //onde começa top cut
-            32, //largura do corte
-            32, //altura do corte
-            x, y,
-            32, //tamnho x da imagem
-            32 //tamanho y da imagem  
-        )
+		this.isShadowLoaded && ctx.drawImage(this.shadow, x, y);
 
-        this.updateAnimationProgress();
-    }
+
+		const [frameX, frameY] = this.frame;
+
+		this.isLoaded && ctx.drawImage(this.image,
+			frameX * 32, frameY * 32,
+			32, 32,
+			x, y,
+			32, 32
+		)
+
+		this.updateAnimationProgress();
+	}
 
 }
