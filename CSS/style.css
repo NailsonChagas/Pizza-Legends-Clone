@@ -22,7 +22,7 @@ body{
 .game-container{
     position: relative; /*An element with position: relative; is positioned relative to its normal position.*/
     width: 352px;
-    height: 198px;
+    height: 202px;/*198*/
     margin: 0 auto;
     outline: 1px solid white;
 

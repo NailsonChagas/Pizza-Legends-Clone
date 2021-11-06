@@ -195,7 +195,7 @@ window.OverworldMaps = {
 					events: [
 						{ who: "npcB", type: "walk", direction: "left" },
 						{ who: "npcB", type: "stand", direction: "up", time: 500 },
-						{ type: "textMessage", text: "You can't be in there!" },
+						{ type: "textMessage", text: "Você não pode entrar aqui!" },
 						{ who: "npcB", type: "walk", direction: "right" },
 						{ who: "hero", type: "walk", direction: "down" },
 						{ who: "hero", type: "walk", direction: "left" },
