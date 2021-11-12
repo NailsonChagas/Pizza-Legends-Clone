@@ -78,7 +78,8 @@ class Overworld {
 
 
 		/*this.map.startCutscene([
-		   {type: "changeMap", map: "DemoRoom"}
+		   	//{type: "battle"}
+			//{type: "changeMap", map: "DemoRoom"}
 			//{ type: "textMessage", text: "Teste teste teste teste teste teste"}
 		]);*/
 	}

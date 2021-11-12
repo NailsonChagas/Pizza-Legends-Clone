@@ -32,6 +32,14 @@ const utils = {
 			detail
 		});
 		document.dispatchEvent(event);
+	},
+	
+	wait(ms) {
+		return new Promise(resolve => {
+			setTimeout(() => {
+				resolve();
+			}, ms)
+		})
 	}
 
 }

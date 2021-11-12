@@ -146,6 +146,21 @@ window.OverworldMaps = {
 					}
 				]
 			}),
+			npcC: new Person({
+				x: utils.withGrid(1),
+				y: utils.withGrid(9),
+				src: "/IMG/characters/people/npc3.png",
+				behaviorLoop: [
+				   { type: "stand",  direction: "right" },
+				], 
+				talking: [
+					{
+						events: [
+							{ type: "textMessage", text: "Teste luta", faceHero: "npcC" },
+						]
+					}
+				]
+			}),
 		},
 		walls: {
             [utils.asGridCoord(0, 4)]: true,
@@ -205,7 +220,15 @@ window.OverworldMaps = {
 			[utils.asGridCoord(5, 10)]: [
 				{
 					events: [
-						{ type: "changeMap", map: "Kitchen" }
+						{ type: "changeMap", map: "Kitchen" },
+					]
+				}
+			],
+			[utils.asGridCoord(2, 9)]: [
+				{
+					events: [
+						{type: "textMessage", text: "Testando a luta" },
+						{type: "battle"},
 					]
 				}
 			]
@@ -228,11 +251,65 @@ window.OverworldMaps = {
 				talking: [
 					{
 						events: [
-							{ type: "textMessage", text: "You made it!", faceHero: "npcB" },
+							{ type: "textMessage", text: "Você trocou de mapa!", faceHero: "npcB" },
 						]
 					}
 				]
 			})
+		},
+		cutsceneSpaces: {
+			[utils.asGridCoord(5, 10)]: [
+				{
+					events: [
+						{ type: "changeMap", map: "DemoRoom" },
+						
+					]
+				}
+			]
+		},
+		walls: {
+			//paredes
+			[utils.asGridCoord(1, 3)]: true,
+			[utils.asGridCoord(2, 3)]: true,
+			[utils.asGridCoord(3, 3)]: true,
+			[utils.asGridCoord(4, 3)]: true,
+			[utils.asGridCoord(5, 3)]: true,
+			[utils.asGridCoord(6, 3)]: true,
+			[utils.asGridCoord(7, 3)]: true,
+			[utils.asGridCoord(8, 3)]: true,
+			[utils.asGridCoord(9, 3)]: true,
+			[utils.asGridCoord(10, 3)]: true,
+			[utils.asGridCoord(11, 4)]: true,
+			[utils.asGridCoord(12, 4)]: true,
+			[utils.asGridCoord(13, 5)]: true,
+			[utils.asGridCoord(13, 6)]: true,
+			[utils.asGridCoord(13, 7)]: true,
+			[utils.asGridCoord(13, 8)]: true,
+			[utils.asGridCoord(13, 9)]: true,
+			[utils.asGridCoord(12, 10)]: true,
+			[utils.asGridCoord(11, 10)]: true,
+			[utils.asGridCoord(8, 10)]: true,
+			[utils.asGridCoord(7, 10)]: true,
+			[utils.asGridCoord(6, 10)]: true,
+			[utils.asGridCoord(4, 10)]: true,
+			[utils.asGridCoord(3, 10)]: true,
+			[utils.asGridCoord(0, 4)]: true,
+			[utils.asGridCoord(0, 8)]: true,
+
+			//mesas
+			[utils.asGridCoord(10, 9)]: true,
+			[utils.asGridCoord(9, 9)]: true,
+			[utils.asGridCoord(6, 7)]: true,
+			[utils.asGridCoord(7, 7)]: true,
+			[utils.asGridCoord(9, 7)]: true,
+			[utils.asGridCoord(10, 7)]: true,
+			[utils.asGridCoord(1, 5)]: true,
+			[utils.asGridCoord(1, 6)]: true,
+			[utils.asGridCoord(1, 7)]: true,
+
+			//caixas
+			[utils.asGridCoord(2, 9)]: true,
+			[utils.asGridCoord(1, 9)]: true,
 		}
 	},
 }
