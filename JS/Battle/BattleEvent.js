@@ -1,63 +1,90 @@
 class BattleEvent {
-    constructor(event, battle) {
-        this.event = event;
-        this.battle = battle;
-    }
+	constructor(event, battle) {
+		this.event = event;
+		this.battle = battle;
+	}
 
-    textMessage(resolve) {
-        const text = this.event.text
-        .replace("{CASTER}", this.event.caster?.name)
-        .replace("{TARGET}", this.event.target?.name)
-        .replace("{ACTION}", this.event.action?.name)
+	textMessage(resolve) {
 
-        const message = new TextMessage({
-            text,
-            onComplete: () => {
-                resolve();
-            }
-        });
-        message.init(this.battle.element)
-    }
+		const text = this.event.text
+			.replace("{CASTER}", this.event.caster?.name)
+			.replace("{TARGET}", this.event.target?.name)
+			.replace("{ACTION}", this.event.action?.name)
 
-    async stateChange(resolve) {
-        const {caster, target, damage} = this.event;
-        if(damage) {
-            //modificar o hp do alvo
-            target.update({
-                hp: target.hp - damage
-            })
+		const message = new TextMessage({
+			text,
+			onComplete: () => {
+				resolve();
+			}
+		})
+		message.init(this.battle.element)
+	}
 
-            //piscar
-            target.pizzaElement.classList.add("battle-damage-blink");
-        }
+	async stateChange(resolve) {
+		const { caster, target, damage, recover, status, action } = this.event;
+		let who = this.event.onCaster ? caster : target;
+		if (action.targetType === "friendly") {
+			who = caster;
+		}
 
-        //esperar 
-        await utils.wait(600);
+		if (damage) {
+			//modify the target to have less HP
+			target.update({
+				hp: target.hp - damage
+			})
 
-        //parar de piscar
-        target.pizzaElement.classList.remove("battle-damage-blink");
+			//start blinking
+			target.pizzaElement.classList.add("battle-damage-blink");
+		}
 
-        resolve();
-    }
+		if (recover) {
+			let newHp = who.hp + recover;
+			if (newHp > who.maxHp) {
+				newHp = who.maxHp;
+			}
+			who.update({
+				hp: newHp
+			})
+		}
 
-    submissionMenu(resolve) {
-        const menu = new SubmissionMenu({
-            caster: this.event.caster,
-            enemy: this.event.enemy,
-            onComplete: submission => {
-                //submission = q habilidade usar e em quem usar
-                resolve(submission);
-            }
-        });
-        menu.init(this.battle.element);
-    }
+		if (status) {
+			who.update({
+				status: { ...status }
+			})
+		}
+		if (status === null) {
+			who.update({
+				status: null
+			})
+		}
 
-    animation(resolve){
-        const fn = BattleAnimations[this.event.animation];
-        fn(this.event, resolve);
-    }
 
-    init(resolve) {
-        this[this.event.type](resolve);
-    }
+		//Wait a little bit
+		await utils.wait(600)
+
+		//stop blinking
+		target.pizzaElement.classList.remove("battle-damage-blink");
+		resolve();
+	}
+
+	submissionMenu(resolve) {
+		const menu = new SubmissionMenu({
+			caster: this.event.caster,
+			enemy: this.event.enemy,
+			onComplete: submission => {
+				//submission { what move to use, who to use it on }
+				resolve(submission)
+			}
+		})
+		menu.init(this.battle.element)
+	}
+
+	animation(resolve) {
+		const fn = BattleAnimations[this.event.animation];
+		fn(this.event, resolve);
+	}
+
+	init(resolve) {
+		this[this.event.type](resolve);
+	}
 }
